@@ -1,0 +1,9 @@
+# Djot.js
+
+Ripped these files from [jgm/djot.js](https://github.com/jgm/djot.js).
+
+Originally, I wanted to use djot as an npm library with Deno.
+However, as of Feb 2023, the `deno compile` option does not support npm modules.
+
+After ripping files from the djot.js implementation, I reformatted imports to work with Deno, 
+removed the npm/node-related commands (like `process` and `fs`), and removed files I didn't need (like `cli.ts` and `pandoc.ts`)
