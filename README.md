@@ -2,6 +2,8 @@
 
 A note-taking system that supports flash-card generation
 
+> ⚠️ Windows-only at the moment!
+
 ## Motivation
 
 Flash-cards are [awesome](https://ncase.me/remember/)
