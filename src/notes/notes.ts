@@ -61,15 +61,19 @@ function example2(): File {
  *   |_ bio/
  *     |_ emia.dj
  */
-export function createNotesTemplate(dir: string): void {
-    const files: File[] = [
-        indexdj(), // Homepage
-        example(), // Example note
-        example2(),
-    ].map(fp => { 
+export function createNotesTemplate(dir: string, withExamples: boolean): void {
+    const files: File[] = [indexdj()];
+    if (withExamples) {
+        files.push(example());
+        files.push(example2());
+    }
+    
+    files.map(fp => { 
         return {path: join(dir, fp.path), content: fp.content};
     });
-    console.debug(files);
+
+    // console.debug(files);
+
     files.forEach(async (fp) => {
         // ensureFile will NOT overwrite existing files
         await ensureFile(fp.path);

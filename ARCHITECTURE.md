@@ -1,6 +1,6 @@
 ## ARCHITECTURE
 
-`plash` is compiled, using `Deno`, from the `src/index.ts` file.
+`plash speed` is compiled, using `Deno`, from the `src/index.ts` file.
 
 Once you clone the repository, test the project with:
 
@@ -13,6 +13,8 @@ After fiddling about with it, try compiling program:
 ```bash
 deno compile --allow-read --allow-net --output .\build\target\plashspeed .\src\index.ts
 ```
+
+I dogfood `plash speed` by using it to write the documentation (see `docs`).
 
 ## CLI
 

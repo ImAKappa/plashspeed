@@ -1,23 +1,23 @@
-import { getErrorMessage } from "../utils/errors.ts";
+import { Errorer } from "../utils/errors.ts";
 import { parse, Args } from "https://deno.land/std@0.175.0/flags/mod.ts";
 import { Program } from "./program.ts";
 
-export type Actions = Record<string, {fn: (options?: string[]) => void, help?: string }>;
+interface Action {fn: (args: Args) => void, help?: string}
+export type Actions = Record<string, Action>;
 
+/** Command Line Interface */
 export class Cli {
 
-    program: Program;
-    args: Args;
-    actions: Actions;
+    readonly program: Program;
+    readonly args: Args;
+    readonly actions: Actions;
+    private err: Errorer;
 
     constructor(program: Program, actions: Actions) {
         this.program = program;
         this.args = this.parseArgs();
         this.actions = actions;
-    }
-
-    error(err: string): Error {
-        throw new Error(err);
+        this.err = new Errorer();
     }
 
     usage(): string {
@@ -35,40 +35,35 @@ export class Cli {
     }
 
     parseArgs(): Args {
-        const args = parse(Deno.args, {
-            boolean: ["help"]
-        });
+        const args = parse(Deno.args, {boolean: ["help"]});
         return args;
     }
 
-    _checkEmptyCommand(): void {
+    private _checkEmptyCommand(): void {
         if (this.args.help) {
             console.log(this.help());
             Deno.exit();
         }
-        this.error("missing command");
+        this.err.error("missing command");
+        return;
     }
 
     /** Runs a set of possible actions based on cli args */
-    handleActions(c: Actions) {
+    handleActions(c: Actions): void {
         const args = this.args["_"].map(el => el.toString());
         // Handle commands
         const command = args[0] ?? this._checkEmptyCommand();
-        const action = c[command] ?? this.error(`"${command}" not recognized as a valid command`);
-        // Handle options
-        const options = args.slice(1);
-        if (options.length == 0) {
-            action.fn();
-        } else {
-            action.fn(options);
-        }
+        const action = c[command] ?? this.err.error(`"${command}" not recognized as a valid command`);
+        action.fn(this.args);
+        return;
     }
 
-    run() {
+    run(): void {
         try {
             this.handleActions(this.actions);
         } catch (err) {
-            console.log(`error: ${getErrorMessage(err)}\n\n${this.usage()}\n`);
+            console.log(`error: ${this.err.getErrorMessage(err)}\n\n${this.usage()}\n`);
         }
+        return;
     }
 }
