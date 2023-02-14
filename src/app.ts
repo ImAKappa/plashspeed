@@ -3,50 +3,96 @@ import { createNotesTemplate } from "./notes/notes.ts";
 import { Errorer } from "./utils/errors.ts";
 import { parse, Args } from "https://deno.land/std@0.175.0/flags/mod.ts";
 
-/** Class for modelling app actions */
-export class AppAction {
+export interface SubCommand {
+    args?: Args;
+    description: string;
+    err: Errorer;
+    help(): void;
+    execute(): void;
+}
 
-    private err: Errorer;
+export class New implements SubCommand {
+    args?: Args;
+    description = "Generate new notes scaffold";
+    err = new Errorer();
 
-    constructor() {
-        this.err = new Errorer();
+    constructor(args?: Args) {
+        this.args = args;
+        args?.help ?? this.help();
     }
 
-    new(args: Args): void {
-        console.log("`new`");
-        // if (args === undefined) {
-        //     this.err.error("Missing options");
-        //     // `return` is unreachable due to thrown error, but TS linter can't tell
-        //     return;
-        // }
-        // const dir = options[0] ?? this.err.error("`new` requires `dir` option. Missing path of a directory");
-        // const emptyTemplate = options[1] === "--empty";
-        // createNotesTemplate(dir, emptyTemplate);
-        return;
+    help() {
+        console.log(`${this.description}`);
     }
 
-    build() {
-        console.log("`build`");
-    }
-
-    serve(args: Args) {
-        console.log("`serve`");
-    }
-
-    speed() {
-        console.log("plash speed ㅋㅋㅋㅋㅋㅋ https://youtu.be/cEN00wMFB2A");
+    execute(): void {
+        if (this.args == undefined) return;
+        console.log(this.args["_"][0] + "execute");
     }
 }
 
-// export function actionNew(options?: string[]): void {
-//     if (options === undefined || options.length == 0) {
-//         throw new Error("missing root `dir` for notes");
-//     } else if (options.length > 1) {
-//         throw new Error("too many options for root `dir`, only 1 is required");
-//     }
-//     const dir = options[0];
-//     return;
-// }
+export class Build implements SubCommand {
+    args?: Args;
+    description = "Build the notes website";
+    err = new Errorer();
+
+    constructor(args?: Args) {
+        this.args = args;
+        args?.help ?? this.help();
+    }
+
+    help() {
+        console.log(`${this.description}`);
+    }
+
+    execute(): void {
+        if (this.args == undefined) return;
+        console.log(this.args["_"][0] + "execute");
+    }
+}
+
+export class Serve implements SubCommand {
+    args?: Args;
+    description = "Serves website for convenient editing";
+    err = new Errorer();
+
+    constructor(args?: Args) {
+        this.args = args;
+        args?.help ?? this.help();
+    }
+
+    help() {
+        console.log(`${this.description}`);
+    }
+
+    execute(): void {
+        if (this.args == undefined) return;
+        console.log(this.args["_"][0] + "execute");
+    }
+}
+
+export class Speed implements SubCommand {
+    args?: Args;
+    description = "?";
+    err = new Errorer();
+
+    constructor(args?: Args) {
+        this.args = args;
+        this.args?.help ?? this.help();
+        if (this.args) {
+            this.args["_"].length == 1 || this.err.error("'speed' does not take extra options");
+        }
+    }
+
+    help() {
+        console.log(`${this.description}`);
+    }
+
+    execute(): void {
+        if (this.args == undefined) return;
+        console.log("plash speed ㅋㅋㅋㅋㅋㅋ https://youtu.be/cEN00wMFB2A");
+    }
+}
 
 export function actionBuild(options?: string[]): void {
     if (options !== undefined) {

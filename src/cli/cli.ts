@@ -1,23 +1,24 @@
 import { Errorer } from "../utils/errors.ts";
 import { parse, Args } from "https://deno.land/std@0.175.0/flags/mod.ts";
 import { Program } from "./program.ts";
+import { SubCommand} from "../app.ts";
 
-interface Action {fn: (args: Args) => void, help?: string}
-export type Actions = Record<string, Action>;
+export type SubCommands = Record<string, (args?: Args) => SubCommand>;
 
 /** Command Line Interface */
 export class Cli {
 
     readonly program: Program;
     readonly args: Args;
-    readonly actions: Actions;
+    readonly commands: SubCommands;
     private err: Errorer;
 
-    constructor(program: Program, actions: Actions) {
+    constructor(program: Program, actions: SubCommands) {
         this.program = program;
         this.args = this.parseArgs();
-        this.actions = actions;
+        this.commands = actions;
         this.err = new Errorer();
+        console.log(this.args);
     }
 
     usage(): string {
@@ -27,10 +28,10 @@ export class Cli {
     help(): string {
         let helpOutput = `${this.program.name} v${this.program.version}\nA note-taking system\n\n`;
         // Options
-        helpOutput += `OPTIONS:\n\t-h, --help\t\tPrint help information\n\n`
+        helpOutput += `OPTIONS:\n\t--help\t\tPrint help information\n\n`;
         // Commands
-        const availableCommands = Object.keys(this.actions).map(c => `${c}\t\t${this.actions[c].help ?? ""}`);
-        helpOutput += `Available commands\n  ${availableCommands.join("\n  ")}`
+        const availableCommands = Object.keys(this.commands).map(c => `${c}\t\t${this.commands[c]().description ?? ""}`);
+        helpOutput += `Available commands\n  ${availableCommands.join("\n  ")}`;
         return helpOutput;
     }
 
@@ -39,28 +40,27 @@ export class Cli {
         return args;
     }
 
-    private _checkEmptyCommand(): void {
+    private noSubcommand(): void {
         if (this.args.help) {
             console.log(this.help());
             Deno.exit();
         }
-        this.err.error("missing command");
+        this.err.error("missing subcommand");
         return;
     }
 
     /** Runs a set of possible actions based on cli args */
-    handleActions(c: Actions): void {
-        const args = this.args["_"].map(el => el.toString());
-        // Handle commands
-        const command = args[0] ?? this._checkEmptyCommand();
-        const action = c[command] ?? this.err.error(`"${command}" not recognized as a valid command`);
-        action.fn(this.args);
+    handleCommands(c: SubCommands): void {
+        const subcommands = this.args["_"].map(el => el.toString());
+        const commanName = subcommands[0] ?? this.noSubcommand();
+        const subcommand = c[commanName] ?? this.err.error(`"${commanName}" not recognized as a valid command`);
+        subcommand(this.args);
         return;
     }
 
     run(): void {
         try {
-            this.handleActions(this.actions);
+            this.handleCommands(this.commands);
         } catch (err) {
             console.log(`error: ${this.err.getErrorMessage(err)}\n\n${this.usage()}\n`);
         }

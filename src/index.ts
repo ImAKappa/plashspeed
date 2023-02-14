@@ -1,24 +1,21 @@
 /// Entry point to the executable
-
 import { Program } from "./cli/program.ts";
-import { Cli, Actions } from "./cli/cli.ts";
-import { AppAction } from "./app.ts";
+import { Args } from "https://deno.land/std@0.175.0/flags/mod.ts";
+import { Cli, SubCommands } from "./cli/cli.ts";
+import { New, Build, Serve, Speed } from "./app.ts";
 
-function main(program: Program) {
-    const app = new AppAction();
-    const actions: Actions = {
-        "new": {fn: app.new, help: "Generate new notes scaffold"},
-        "build": {fn: app.build, help: "build notes website"},
-        "serve": {fn: app.serve, help: "serves website for convenient editing"},
-        "speed": {fn: app.speed, help: "?"},
+function main() {
+    const program: Program = { name: "plash speed", version: 0.1 };
+    const commands: SubCommands = {
+        "new": (args?: Args) => new New(args),
+        "build": (args?: Args) => new Build(args),
+        "serve": (args?: Args) => new Serve(args),
+        "speed": (args?: Args) => new Speed(args),
     }
-    const cli = new Cli(program, actions);
+    const cli = new Cli(program, commands);
     cli.run();
+
+    let c = New;
 }
 
-const program: Program = {
-    name: "plash speed",
-    version: 0.1,
-}
-
-main(program);
+main();
