@@ -1,8 +1,6 @@
 ## ARCHITECTURE
 
-`plash speed` is compiled, using `Deno`, from the `src/index.ts` file.
-
-Once you clone the repository, test the project with:
+`plash speed` is developed using Rust, Clap, and jotdown.
 
 ```bash
 deno run --allow-read=. --allow-write=. ./src/index.ts [COMMAND] [OPTION]

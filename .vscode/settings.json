@@ -1,7 +1,3 @@
 {
-    "deno.enable": true,
-    "files.watcherExclude": {
-        "**/target": true
-    },
     "editor.rulers": [80],
 }
