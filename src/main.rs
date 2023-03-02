@@ -12,7 +12,7 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     New { dir: String },
-    Build { out: String },
+    Build { config: String },
     Speed,
 }
 
@@ -23,11 +23,14 @@ fn main() {
         Commands::New { dir } => {
             match notes::new(dir.to_string()) {
                 Ok(_) => println!("Created notes!"),
-                Err(error) => println!("Unable to create notes! {:?}", error),
+                Err(error) => eprintln!("Unable to create notes! {:?}", error),
             };
         },
-        Commands::Build { out } => {
-            notes::build(out.to_string());
+        Commands::Build { config }=> {
+            match notes::build(config.to_string()) {
+                Ok(_) => println!("Built site!"),
+                Err(error) => eprintln!("Unable to build site! {:?}", error),
+            };
         },
         Commands::Speed => {
             println!("https://youtu.be/cEN00wMFB2A");
