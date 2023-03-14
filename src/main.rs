@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use plashspeed::{notes, renderer, config::{self, BuildConfig}};
+use plashspeed::{config, notes, renderer};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -21,22 +21,21 @@ fn main() {
 
     match &cli.command {
         Commands::New { dir } => {
-
             let mut config = config::Config::default();
 
             match notes::new(dir.to_string(), &mut config) {
                 Ok(_) => println!("Created notes!"),
                 Err(error) => eprintln!("Unable to create notes! {:?}", error),
             };
-        },
-        Commands::Build { config }=> {
+        }
+        Commands::Build { config } => {
             match renderer::build::build(config.to_string()) {
                 Ok(_) => println!("Built site!"),
                 Err(error) => eprintln!("Unable to build site! {:?}", error),
             };
-        },
+        }
         Commands::Speed => {
             println!("https://youtu.be/cEN00wMFB2A");
-        },
+        }
     }
 }

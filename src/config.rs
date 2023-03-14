@@ -1,5 +1,5 @@
 //! Configuration for PlashSpeed
-//! 
+//!
 //! Main entry point for configuration is the `Config` struct
 //!  
 //! Configuration gets serialized as TOML format in `plash.toml` file
@@ -8,7 +8,7 @@
 
 use std::path::PathBuf;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {

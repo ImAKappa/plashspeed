@@ -1,10 +1,10 @@
-use std::fs::{File, create_dir_all, self};
-use std::path::Path;
-use std::io::{Write, Error};
 use jotdown::Parser;
+use std::fs::{self, create_dir_all, File};
+use std::io::{Error, Write};
+use std::path::Path;
 use toml::map::Map;
-use walkdir::WalkDir;
 use toml::Table;
+use walkdir::WalkDir;
 
 /// Assume the user has cd into top-level note directory
 pub fn build(config_path: String) -> Result<(), Error> {

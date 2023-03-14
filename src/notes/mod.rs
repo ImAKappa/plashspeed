@@ -1,11 +1,11 @@
-use std::fs::{File, create_dir_all, self};
-use std::path::Path;
-use std::io::{Write, Error};
-use serde::{Serialize, Deserialize};
 use jotdown::Parser;
+use serde::{Deserialize, Serialize};
+use std::fs::{self, create_dir_all, File};
+use std::io::{Error, Write};
+use std::path::Path;
 use toml::map::Map;
-use walkdir::WalkDir;
 use toml::Table;
+use walkdir::WalkDir;
 
 use crate::config::Config;
 
