@@ -2,8 +2,6 @@
 
 A note-taking system that supports flash-card generation
 
-> ⚠️ Windows-only at the moment.
-
 ## Motivation
 
 Flash-cards are [awesome](https://ncase.me/remember/)
@@ -19,7 +17,9 @@ That way you get the benefits of flash cards, plus the context of your fleshed-o
 
 Write notes in a plain-text file using [Djot markup](https://djot.net/).
 
-> Currently, only Djot markup is supported. It's like Markdown, but a bit nicer to work with.
+> Currently, only Djot markup is supported. It's like Markdown, but a bit experimental.
+> 
+> I liked the attribute system and thought it would be convenient to write with and render from.
 
 For sections of your notes that you want converted to flash cards, use the div syntax with the class name `card`. Then annotate the front and back content of the card with [Block-level attributes](https://htmlpreview.github.io/?https://github.com/jgm/djot/blob/master/doc/syntax.html#block-attributes)
 
@@ -78,7 +78,7 @@ Just like with Anki, you can number an arbitrary number of cloze deletions
 
 ## Note Filesystem
 
-`cd` to some directory, like `mycwd`, on your computer, then run `plash new [NOTE ROOT DIR]`. Your current working directory should still be `mycwd`.
+`cd` to some directory, like `mycwd`, on your computer, then run `plash new [NOTE ROOT DIR]`. Your current working directory should still be `mycwd`. Then run `plash build` to generate the website files
 
 bash
 ```
@@ -92,16 +92,27 @@ bash
     |_ lec2.html
   |_ index.html
   
-|_ src/ # <-- you edit files here
+|_ notes/ # <-- you edit files here
   |_ index.dj
   |_ bio/
     |_ lec1.dj
     |_ lec2.dj
+|_ plash.toml
 ```
 
+Use whatever file structure makes sense to you within the `notes` directory (as long as the file and directory names can be formed into a valid URL).
+The website will be rendered with the same directory structure.
 
-Use whatever file structure makes sense to you within the `src` directory (as long as the file and directory names can be formed into a valid URL).
-The website will be rendered with the same directory structure
+## Configuration
+
+Settings are configured in the `plash.toml` file
+
+```toml
+[notes]
+title = "biology"
+authors = [""]
+description = ""
+```
 
 ## CLI Options
 

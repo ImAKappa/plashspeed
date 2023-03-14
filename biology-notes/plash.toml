@@ -1,0 +1,7 @@
+[notes]
+title = "biology-notes"
+authors = [""]
+description = "My notes"
+
+[build]
+build-dir = "notes"
